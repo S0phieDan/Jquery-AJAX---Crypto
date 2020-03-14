@@ -41,11 +41,18 @@ header{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
     margin-top: 10px;
 }
 
 .card{
     margin: 5px;
+}
+
+.loading{
+    width: 50%;
+    text-align: center;
+    display: block;
 }
 
 

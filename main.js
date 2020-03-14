@@ -3,6 +3,7 @@ function createCardForCoin(coin,i)
     let divCard = $('<div></div>');
     divCard.addClass('card border-primary mb-3');
     divCard.attr("style", "width: 20rem;");
+    
 
     let divHeaderCard = $('<div></div>');
     divHeaderCard.addClass('card-header');
@@ -28,7 +29,6 @@ function createCardForCoin(coin,i)
     let button = $('<button type="button" class="btn btn-success"></button>');
     button.html("More Info");
     button.attr("id",'moreInfo'+ i+'');
-    
     button.attr("onclick", 'openMoreInfo('+i+ ',' +'"'+ coin.id +'"' +')');
     let divButton = $('<div></div>');
     divButton.attr("style", "margin-top: 10px;");
@@ -59,7 +59,8 @@ function openMoreInfo(index,string_id)
         let divCollapser = $('<div></div>');
         divCollapser.html(data_for_coin.market_data.current_price.usd+"$");
 
-        let parent = $('#moreInfo'+index+'').parent();
+        let parent = $('#moreInfo'+index+'').parent().parent();
+        console.log(parent);
         parent.append(divCollapser);
 
 
@@ -81,15 +82,16 @@ $(document).ready(function(){
         dataType: 'json'
     }).done(function(data)
     {
+        $('.loading').attr("style", "display: none;");
         var coins = data;
 
-        /*coins.forEach(coin => {
+        coins.forEach(coin => {
             createCardForCoin(coin);
-        });*/
+        });
 
-        for(let i=0; i<50; i++){
+        /*for(let i=0; i<50; i++){
             createCardForCoin(coins[i],i);
-        }
+        }*/
 
 
         
