@@ -74,7 +74,19 @@ function openMoreInfo(index,string_id)
                     +data_per_coin.market_data.current_price.eur+" €"+'<br>'+
                     +data_per_coin.market_data.current_price.ils+" ₪"+'<br>'+'')
         
-        
+                
+        let expandedAttr = $('#moreInfo'+index+'').attr("aria-expanded");
+        let  strTrue = "true";
+
+        let result = strTrue.localeCompare(expandedAttr);
+
+        if(result === 0){
+            $('#moreInfo'+index+'').text("Less Info");
+        }
+        else {
+            $('#moreInfo'+index+'').text("More Info");
+        }
+
         //let parent = $('#moreInfo'+index+'').parent();
         
     });
