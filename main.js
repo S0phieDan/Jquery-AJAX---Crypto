@@ -24,17 +24,24 @@ function createCardForCoin(coin,i)
 
     let divBodyCard = $('<div></div>');
     divBodyCard.addClass('card-body');
-    divBodyCard.html(coin.name);
+    divBodyCard.html('<h4>'+ coin.name+ '</h4>');
 
-    let button = $('<button type="button" class="btn btn-success"></button>');
-    button.html("More Info");
-    button.attr("id",'moreInfo'+ i+'');
-    button.attr("onclick", 'openMoreInfo('+i+ ',' +'"'+ coin.id +'"' +')');
-    let divButton = $('<div></div>');
-    divButton.attr("style", "margin-top: 10px;");
-    divButton.append(button);
+    let newDiv = $('<div class="collapse" id="collapseDiv'+i+'"></div>');
+    divBodyCard.append(newDiv);
+
+    let button = $('<button class="btn btn-success" type="button" data-toggle="collapse" data-target="#collapseDiv'+i+'" aria-expanded="false" aria-controls="collapseDiv'+i+'">More Info</button>');
+   // let newDiv = $('<div class="collapse" id="collapseDiv'+i+'">Hello World!</div>');
+
+   button.attr("id",'moreInfo'+ i+'');
+   button.attr("onclick", 'openMoreInfo('+i+ ',' +'"'+ coin.id +'"' +')');
+   // let divButton = $('<div></div>');
+   // divButton.attr("style", "margin-top: 10px;");
+   // divButton.append(button);
  
-    divBodyCard.append(divButton);
+    
+    divBodyCard.append(button);
+
+
 
     divCard.append(divHeaderCard);
     divCard.append(divBodyCard);
@@ -43,32 +50,36 @@ function createCardForCoin(coin,i)
 
 }
 
+function getDataFromApi(url_api)
+{
+    let responsePromise = fetch(url_api).then(response => {
+        return response.json();//Promise return
+    });
+    return responsePromise;
+}
+
 function openMoreInfo(index,string_id)
 {
+    let url_of_api = "https://api.coingecko.com/api/v3/coins/"+string_id;
+    let data_per_coin = [];
 
-    $.ajax({
-        method: 'GET',
-        url: 'https://api.coingecko.com/api/v3/coins/'+string_id,
-        dataType: 'json'
-    }).done(function(data)
-    {
-        var data_for_coin = data;
-        console.log(data_for_coin);
-        console.log(data_for_coin.market_data.usd);
+    getDataFromApi(url_of_api)
+    .then(responseJson => {
+        data_per_coin = responseJson;
+    
+        let img_url = data_per_coin.image.small;
 
-        let divCollapser = $('<div></div>');
-        divCollapser.html(data_for_coin.market_data.current_price.usd+"$");
-
-        let parent = $('#moreInfo'+index+'').parent().parent();
-        console.log(parent);
-        parent.append(divCollapser);
-
-
+        $('#collapseDiv'+index+'').html('<img src='+img_url+'>'+'<br>'
+                    +data_per_coin.market_data.current_price.usd+" $"+'<br>'+
+                    +data_per_coin.market_data.current_price.eur+" €"+'<br>'+
+                    +data_per_coin.market_data.current_price.ils+" ₪"+'<br>'+'')
+        
+        
+        //let parent = $('#moreInfo'+index+'').parent();
         
     });
-    
 
-
+ 
 
 }
 
@@ -85,13 +96,13 @@ $(document).ready(function(){
         $('.loading').attr("style", "display: none;");
         var coins = data;
 
-        coins.forEach(coin => {
+        /*coins.forEach(coin => {
             createCardForCoin(coin);
-        });
+        });*/
 
-        /*for(let i=0; i<50; i++){
+        for(let i=0; i<100; i++){
             createCardForCoin(coins[i],i);
-        }*/
+        }
 
 
         
