@@ -46,7 +46,7 @@ header{
 }
 
 .card{
-    margin: 5px;
+    margin: 10px;
 }
 
 .loading{
@@ -54,5 +54,12 @@ header{
     text-align: center;
     display: block;
 }
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
 
 

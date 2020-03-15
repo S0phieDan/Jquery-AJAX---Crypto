@@ -27,6 +27,8 @@ function createCardForCoin(coin,i)
     divBodyCard.html('<h4>'+ coin.name+ '</h4>');
 
     let newDiv = $('<div class="collapse" id="collapseDiv'+i+'"></div>');
+    let loadingCard = $('<img class="center" src="076_-loading_animated.gif" style="width:150px;height:auto;">');
+    newDiv.append(loadingCard);
     divBodyCard.append(newDiv);
 
     let button = $('<button class="btn btn-success" type="button" data-toggle="collapse" data-target="#collapseDiv'+i+'" aria-expanded="false" aria-controls="collapseDiv'+i+'">More Info</button>');
@@ -70,9 +72,9 @@ function openMoreInfo(index,string_id)
         let img_url = data_per_coin.image.small;
 
         $('#collapseDiv'+index+'').html('<img src='+img_url+'>'+'<br>'
-                    +data_per_coin.market_data.current_price.usd+" $"+'<br>'+
-                    +data_per_coin.market_data.current_price.eur+" €"+'<br>'+
-                    +data_per_coin.market_data.current_price.ils+" ₪"+'<br>'+'')
+                    +'<b>USD</b>: '+data_per_coin.market_data.current_price.usd+" $"+'<br>'
+                    +'<b>EUR</b>: '+data_per_coin.market_data.current_price.eur+" €"+'<br>'
+                    +'<b>ILS</b>: '+data_per_coin.market_data.current_price.ils+" ₪"+'<br><br>'+'')
         
                 
         let expandedAttr = $('#moreInfo'+index+'').attr("aria-expanded");
@@ -86,8 +88,6 @@ function openMoreInfo(index,string_id)
         else {
             $('#moreInfo'+index+'').text("More Info");
         }
-
-        //let parent = $('#moreInfo'+index+'').parent();
         
     });
 
@@ -112,7 +112,7 @@ $(document).ready(function(){
             createCardForCoin(coin);
         });*/
 
-        for(let i=0; i<100; i++){
+        for(let i=0; i<1000; i++){
             createCardForCoin(coins[i],i);
         }
 
