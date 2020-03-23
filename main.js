@@ -179,8 +179,8 @@ function addCoinToReps(symbol){
     let result = state.localeCompare("false");
 
     if(result === 0){
-        $( "input[coin_symbol='"+symbol+"']" ).attr("is_checked", "true");
         if(coinsFromLS.length <= 4){
+            $( "input[coin_symbol='"+symbol+"']" ).attr("is_checked", "true");
             coinsFromLS.push(symbol);
         }
         else{
