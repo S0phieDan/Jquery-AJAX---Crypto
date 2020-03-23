@@ -109,12 +109,12 @@ function openMoreInfo(index,string_id)
 
 }
 
-function createModal()
+function createModal(id)
 {
-    let modal = $('<div class="modal show"></div>');
+    let modal = $('<div class="modal"></div>');
     let modal_dialog = $('<div class="modal-dialog" role="document"></div>');
     let modal_content =$('<div class="modal-content"></div>');
-    let modal_header = $('<div class="modal-header"><h5 class="modal-title">Modal title</h5><button class="close" aria-label="Close" type="button" data-dismiss="modal"> <span aria-hidden="true">&times;</span></button></div>');
+    let modal_header = $('<div class="modal-header"><h5 class="modal-title">Modal title</h5><button class="close" aria-label="Close" type="button" data-dismiss="modal"><span aria-hidden="true">&times;</span></button></div>');
     let modal_body =$('<div class="modal-body"><p>Modal body text goes here.</p></div>');
     let modal_footer =$('<div class="modal-footer"><button class="btn btn-primary" type="button">Save changes</button><button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button></div>');
 
@@ -125,7 +125,9 @@ function createModal()
     modal_dialog.append(modal_content);
     modal.append(modal_dialog);
 
-    $('.container').append(modal);
+    $('body').append(modal);
+    $('#'+id+'').attr("data-toggle", "modal");
+    $('#'+id+'').attr("data-target", ".modal");
 
 }
 
@@ -140,7 +142,7 @@ function addCoinToReps(id){
             coinsFromLS.push(id);
         }
         else{
-            createModal();
+            createModal(id);
             
         }
         
