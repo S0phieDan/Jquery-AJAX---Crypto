@@ -112,8 +112,23 @@ function openMoreInfo(index,string_id)
 
 function createLiForModal(coin,i)
 {
-    let li = $('<li class="list-group-item d-flex justify-content-between align-items-center">'+coin+'<span class="badge badge-primary badge-pill">'+i+'</span></li>')
+    let toggle = $('<div class="custom-control custom-switch"></div>');
+    toggle.attr("style", "float: right;");
+    let toggleInput = $('<input type="checkbox" class="custom-control-input">');
+    toggleInput.attr("id",'toggleModal'+ i+'');
+    toggleInput.attr("coin_symbol",coin.symbol);
+    toggleInput.attr('checked','');
+    toggleInput.attr("onclick", 'addCoinToReps('+'"'+ coin +'"'+')');
+    toggle.append(toggleInput);
+    let toggleLabel = $('<label class="custom-control-label"></label>');
+    toggleLabel.attr("for",'toggleModal'+ i+'');
+    toggle.append(toggleLabel);
+
+    let li = $('<li class="list-group-item d-flex justify-content-between align-items-center"><b>'+coin+'</b></li>');
+    let span = $('<span></span>');
+    span.append(toggle);
     li.attr("style", "border: 1px solid #2C3E50;");
+    li.append(span);
 
     return li;
 
@@ -129,9 +144,11 @@ function createModal(symbol,coinsFromLS)
     let modal_body =$('<div class="modal-body"><p>Select only 5 coins from list.</p></div>');
     let modal_list = $('<ul class="list-group"></ul>');
 
-    for(let i=0; i<coinsFromLS.length; i++){
+    for(var i=0; i<coinsFromLS.length; i++){
         modal_list.append(createLiForModal(coinsFromLS[i],i));
     }
+
+    modal_list.append(createLiForModal(symbol,i));
 
     modal_body.append(modal_list);
 
@@ -168,7 +185,7 @@ function addCoinToReps(symbol){
         
     }
     else{
-        $('#'+id+'').attr("is_checked", "false");
+        $("input[coin_symbol='"+symbol+"']").attr("is_checked", "false");
         coinsFromLS.splice(coinsFromLS.indexOf(symbol),1);
     }
     
