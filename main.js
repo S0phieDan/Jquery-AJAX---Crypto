@@ -117,6 +117,7 @@ function createLiForModal(coin,i)
     let toggleInput = $('<input type="checkbox" class="custom-control-input">');
     toggleInput.attr("id",'toggleModal'+ i+'');
     toggleInput.attr("coin_symbol",coin.symbol);
+    toggleInput.attr("is_checked","true");
     toggleInput.attr('checked','');
     toggleInput.attr("onclick", 'addCoinToReps('+'"'+ coin +'"'+')');
     toggle.append(toggleInput);
@@ -148,7 +149,8 @@ function createModal(symbol,coinsFromLS)
         modal_list.append(createLiForModal(coinsFromLS[i],i));
     }
 
-    modal_list.append(createLiForModal(symbol,i));
+    let new_li = createLiForModal(symbol,i);
+    modal_list.append(new_li);
 
     modal_body.append(modal_list);
 
@@ -161,8 +163,11 @@ function createModal(symbol,coinsFromLS)
 
     modal_dialog.append(modal_content);
     modal.append(modal_dialog);
+    
 
     $('body').append(modal);
+    $('#toggleModal'+i+'').removeAttr("checked");
+    $('#toggleModal'+i+'').attr("is_checked","false");
     $( "input[coin_symbol='"+symbol+"']" ).attr("data-toggle", "modal");
     $( "input[coin_symbol='"+symbol+"']" ).attr("data-target", ".modal");
 
