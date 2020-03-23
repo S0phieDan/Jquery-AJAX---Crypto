@@ -19,7 +19,8 @@ function createCardForCoin(coin,i)
     toggle.attr("style", "float: right;");
     let toggleInput = $('<input type="checkbox" class="custom-control-input">');
     toggleInput.attr("id",'toggle'+ i+'');
-    if(coinsFromLS.indexOf(toggleInput.attr("id")) === -1)
+    toggleInput.attr("coin_symbol",coin.symbol);
+    if(coinsFromLS.indexOf(toggleInput.attr("coin_symbol")) === -1)
     {
         toggleInput.attr("is_checked","false");
 
@@ -29,7 +30,7 @@ function createCardForCoin(coin,i)
         toggleInput.attr('checked','');
 
     }
-    toggleInput.attr("onclick", 'addCoinToReps('+'"'+ toggleInput.attr("id")+'"'+')');
+    toggleInput.attr("onclick", 'addCoinToReps('+'"'+ coin.symbol +'"'+')');
     toggle.append(toggleInput);
     let toggleLabel = $('<label class="custom-control-label"></label>');
     toggleLabel.attr("for",'toggle'+ i+'');
@@ -109,14 +110,33 @@ function openMoreInfo(index,string_id)
 
 }
 
-function createModal(id)
+function createLiForModal(coin,i)
+{
+    let li = $('<li class="list-group-item d-flex justify-content-between align-items-center">'+coin+'<span class="badge badge-primary badge-pill">'+i+'</span></li>')
+    li.attr("style", "border: 1px solid #2C3E50;");
+
+    return li;
+
+
+}
+
+function createModal(symbol,coinsFromLS)
 {
     let modal = $('<div class="modal"></div>');
     let modal_dialog = $('<div class="modal-dialog" role="document"></div>');
     let modal_content =$('<div class="modal-content"></div>');
-    let modal_header = $('<div class="modal-header"><h5 class="modal-title">Modal title</h5><button class="close" aria-label="Close" type="button" data-dismiss="modal"><span aria-hidden="true">&times;</span></button></div>');
-    let modal_body =$('<div class="modal-body"><p>Modal body text goes here.</p></div>');
-    let modal_footer =$('<div class="modal-footer"><button class="btn btn-primary" type="button">Save changes</button><button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button></div>');
+    let modal_header = $('<div class="modal-header"><h4 class="modal-title">You can choose only 5 coins:</h4><button class="close" aria-label="Close" type="button" data-dismiss="modal"><span aria-hidden="true">&times;</span></button></div>');
+    let modal_body =$('<div class="modal-body"><p>Select only 5 coins from list.</p></div>');
+    let modal_list = $('<ul class="list-group"></ul>');
+
+    for(let i=0; i<coinsFromLS.length; i++){
+        modal_list.append(createLiForModal(coinsFromLS[i],i));
+    }
+
+    modal_body.append(modal_list);
+
+
+    let modal_footer =$('<div class="modal-footer"><button class="btn btn-primary" type="button">Save changes</button><button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button></div>');
 
     modal_content.append(modal_header);
     modal_content.append(modal_body);
@@ -126,31 +146,30 @@ function createModal(id)
     modal.append(modal_dialog);
 
     $('body').append(modal);
-    $('#'+id+'').attr("data-toggle", "modal");
-    $('#'+id+'').attr("data-target", ".modal");
+    $( "input[coin_symbol='"+symbol+"']" ).attr("data-toggle", "modal");
+    $( "input[coin_symbol='"+symbol+"']" ).attr("data-target", ".modal");
 
 }
 
-function addCoinToReps(id){
+function addCoinToReps(symbol){
     let coinsFromLS = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
-    let state = $('#'+id+'').attr("is_checked");
+    let state = $( "input[coin_symbol='"+symbol+"']" ).attr("is_checked");
     let result = state.localeCompare("false");
 
     if(result === 0){
-        $('#'+id+'').attr("is_checked", "true");
+        $( "input[coin_symbol='"+symbol+"']" ).attr("is_checked", "true");
         if(coinsFromLS.length <= 4){
-            coinsFromLS.push(id);
+            coinsFromLS.push(symbol);
         }
         else{
-            createModal(id);
+            createModal(symbol,coinsFromLS);
             
         }
-        
         
     }
     else{
         $('#'+id+'').attr("is_checked", "false");
-        coinsFromLS.splice(coinsFromLS.indexOf(id),1);
+        coinsFromLS.splice(coinsFromLS.indexOf(symbol),1);
     }
     
     localStorage.setItem('coinsToRepsLocal', JSON.stringify(coinsFromLS));
