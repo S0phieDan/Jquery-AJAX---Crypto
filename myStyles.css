@@ -10,13 +10,6 @@ header{
 
 }
 
-.sticky {
-    position: fixed;
-    top: 0;
-    width: 100%;
-  }
-
-
 .title{
     margin-top: 5px;
     margin-left: 20px;
@@ -58,9 +51,10 @@ header{
     margin-left:8%;
 }
 .loading{
-    width: 50%;
+    width: 100%;
     text-align: center;
     display: block;
+    color: white;
 }
 
 .center {

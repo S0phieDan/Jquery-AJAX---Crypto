@@ -5,7 +5,7 @@ function drawCoins(coins){
             createCardForCoin(coin);
         });*/
     let row = $('<div class="row"></div>');
-    for(let i=0; i<100; i++)
+    for(let i=0; i<500; i++)
     {
         let col_coin = createCardForCoin(coins[i],i);
         row.append(col_coin);
@@ -219,7 +219,6 @@ function addCoinToReps(symbol){
 
 $(document).ready(function(){
 
-    //Reads data json and builds Navbar
     $.ajax({
         method: 'GET',
         url: 'https://api.coingecko.com/api/v3/coins/list',
@@ -227,8 +226,8 @@ $(document).ready(function(){
     }).done(function(data)
     {
         $('.loading').attr("style", "display: none;");
-        var coins = data;
 
+        var coins = data;
         if(localStorage.getItem('coinsToRepsLocal') == null)
         {
             let coinsToReps = [];
