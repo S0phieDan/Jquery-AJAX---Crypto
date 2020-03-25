@@ -1,7 +1,24 @@
+function drawCoins(coins){
+
+    //All coins
+       /*coins.forEach(coin => {
+            createCardForCoin(coin);
+        });*/
+    let row = $('<div class="row"></div>');
+    for(let i=0; i<100; i++)
+    {
+        let col_coin = createCardForCoin(coins[i],i);
+        row.append(col_coin);
+    } 
+
+    $('.container').append(row);
+}
+
 function createCardForCoin(coin,i)
 {
     let coinsFromLS = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
 
+    let colm = $('<div class="col col-"></div>');
     let divCard = $('<div></div>');
     divCard.addClass('card border-primary md-3');
     divCard.attr("style", "width: 20rem;");
@@ -39,7 +56,7 @@ function createCardForCoin(coin,i)
 
     let divBodyCard = $('<div></div>');
     divBodyCard.addClass('card-body');
-    divBodyCard.html('<h4>'+ coin.name+ '</h4>');
+    divBodyCard.html('<h5>'+ coin.name+ '</h5>');
 
     let newDiv = $('<div class="collapse" id="collapseDiv'+i+'"></div>');
     let loadingCard = $('<img class="center" src="076_-loading_animated.gif" style="width:150px;height:auto;">');
@@ -62,8 +79,9 @@ function createCardForCoin(coin,i)
 
     divCard.append(divHeaderCard);
     divCard.append(divBodyCard);
+    colm.append(divCard);
 
-    $('.container').append(divCard);
+    return colm;
 
 }
 
@@ -216,17 +234,8 @@ $(document).ready(function(){
             let coinsToReps = [];
             localStorage.setItem('coinsToRepsLocal', JSON.stringify(coinsToReps));
         }
-        
 
-        /*coins.forEach(coin => {
-            createCardForCoin(coin);
-        });*/
-
-
-        for(let i=0; i<1000; i++){
-            createCardForCoin(coins[i],i);
-        }
-
+        drawCoins(coins);
 
         
     });

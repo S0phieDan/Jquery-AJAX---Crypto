@@ -10,6 +10,12 @@ header{
 
 }
 
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+
 
 .title{
     margin-top: 5px;
@@ -38,16 +44,19 @@ header{
 }
 
 .container{
-    display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 15px;
+}
+
+.col{
+    justify-content: center;
+    padding: 0px;
+    margin-bottom: 15px;
 }
 
 .card{
-    margin: 10px;
+    margin-left:8%;
 }
-
 .loading{
     width: 50%;
     text-align: center;
@@ -59,7 +68,13 @@ header{
     margin-left: auto;
     margin-right: auto;
     width: 50%;
-  }
+}
+
+body{
+    background-color: #2C3E50;
+    background-image: url("asfalt-light.png");
+    background-repeat: repeat;
+}
 
 
 
