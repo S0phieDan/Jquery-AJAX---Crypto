@@ -145,7 +145,7 @@ function createLiForModal(symbol,i)
     toggle.append(toggleLabel);
 
     let li = $('<li class="list-group-item d-flex justify-content-between align-items-center"><b>'+symbol+'</b></li>');
-    let span = $('<span></span>');
+    let span = $('<span id="'+i+'"></span>');
     span.append(toggle);
     li.attr("style", "border: 1px solid #2C3E50;");
     li.append(span);
@@ -224,7 +224,6 @@ function handleToogle(symbol){
 
 function handleToogleModal(symbol,i)
 {
-    
     let coinsModal = JSON.parse(localStorage.getItem('coinsFromModalLocal'));
 
     let state = $('#toggleModal'+ i+'').attr("is_checked");
@@ -237,23 +236,47 @@ function handleToogleModal(symbol,i)
             coinsModal.push(symbol);
         }
         else{
-            $('#toggleModal'+ i+'').attr("disabled","");
-            $('#toggleModal'+ i+'').removeAttr("checked");
+            let toggle = drawToggle(symbol,i);
+            $("span[id='"+i+"']").html(toggle);
+
         }
         
     }else{
         $('#toggleModal'+i+'').attr("is_checked", "false");
         $('#toggleModal'+ i+'').removeAttr("checked");
         coinsModal.splice(coinsModal.indexOf(symbol),1);
-        $('input:last').removeAttr("disabled");
+        
+        $("input[disabled='disabled']").removeAttr("disabled"); //draw enabled toggle
+        
+        
     }
 
-    console.log(coinsModal);
-    console.log(coinsModal.length);
     localStorage.setItem('coinsFromModalLocal', JSON.stringify(coinsModal));
 
+}
+
+
+function drawToggle(symbol,i)
+{
+    let toggle = $('<div class="custom-control custom-switch"></div>');
+    toggle.attr("style", "float: right;");
+    let toggleInput = $('<input type="checkbox" class="custom-control-input">');
+    toggleInput.attr("id",'toggleModal'+ i+'');
+    toggleInput.attr("symbol",symbol);
+    toggleInput.attr("disabled","disabled");
+    toggleInput.attr("is_checked","false");
+    toggleInput.removeAttr('checked');
+   // toggleInput.attr("onclick", 'handleToogleModal('+'"'+ symbol +'"'+','+i+')');
+    toggle.append(toggleInput);
+    let toggleLabel = $('<label class="custom-control-label"></label>');
+    toggleLabel.attr("for",'toggleModal'+ i+'');
+    toggle.append(toggleLabel);
+
+    return toggle;
 
 }
+
+
 
 
 
