@@ -12,6 +12,7 @@ function drawCoins(coins){
     } 
 
     $('.container').append(row);
+
 }
 
 function createCardForCoin(coin,i)
@@ -47,7 +48,7 @@ function createCardForCoin(coin,i)
         toggleInput.attr('checked','');
 
     }
-    toggleInput.attr("onclick", 'addCoinToReps('+'"'+ coin.symbol +'"'+')');
+    toggleInput.attr("onclick", 'handleToogle('+'"'+ coin.symbol +'"'+')');
     toggle.append(toggleInput);
     let toggleLabel = $('<label class="custom-control-label"></label>');
     toggleLabel.attr("for",'toggle'+ i+'');
@@ -128,22 +129,22 @@ function openMoreInfo(index,string_id)
 
 }
 
-function createLiForModal(coin,i)
+function createLiForModal(symbol,i)
 {
     let toggle = $('<div class="custom-control custom-switch"></div>');
     toggle.attr("style", "float: right;");
     let toggleInput = $('<input type="checkbox" class="custom-control-input">');
     toggleInput.attr("id",'toggleModal'+ i+'');
-    toggleInput.attr("coin_symbol",coin.symbol);
+    toggleInput.attr("symbol",symbol);
     toggleInput.attr("is_checked","true");
     toggleInput.attr('checked','');
-    toggleInput.attr("onclick", 'addCoinToReps('+'"'+ coin +'"'+')');
+    toggleInput.attr("onclick", 'handleToogleModal('+'"'+ symbol +'"'+','+i+')');
     toggle.append(toggleInput);
     let toggleLabel = $('<label class="custom-control-label"></label>');
     toggleLabel.attr("for",'toggleModal'+ i+'');
     toggle.append(toggleLabel);
 
-    let li = $('<li class="list-group-item d-flex justify-content-between align-items-center"><b>'+coin+'</b></li>');
+    let li = $('<li class="list-group-item d-flex justify-content-between align-items-center"><b>'+symbol+'</b></li>');
     let span = $('<span></span>');
     span.append(toggle);
     li.attr("style", "border: 1px solid #2C3E50;");
@@ -161,7 +162,7 @@ function createModal(symbol,coinsFromLS)
     let modal_content =$('<div class="modal-content"></div>');
     let modal_header = $('<div class="modal-header"><h4 class="modal-title">You can choose only 5 coins:</h4><button class="close" aria-label="Close" type="button" data-dismiss="modal"><span aria-hidden="true">&times;</span></button></div>');
     let modal_body =$('<div class="modal-body"><p>Select only 5 coins from list.</p></div>');
-    let modal_list = $('<ul class="list-group"></ul>');
+    let modal_list = $('<ul class="list-group" id="ulm"></ul>');
 
     for(var i=0; i<coinsFromLS.length; i++){
         modal_list.append(createLiForModal(coinsFromLS[i],i));
@@ -173,7 +174,11 @@ function createModal(symbol,coinsFromLS)
     modal_body.append(modal_list);
 
 
-    let modal_footer =$('<div class="modal-footer"><button class="btn btn-primary" type="button">Save changes</button><button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button></div>');
+    let modal_footer =$('<div class="modal-footer"></div>');
+    let btnSaveChanges = $('<button class="btn btn-primary" type="button">Save changes</button>');
+    let btnCancelChanges = $('<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>');
+    modal_footer.append(btnSaveChanges);
+    modal_footer.append(btnCancelChanges);
 
     modal_content.append(modal_header);
     modal_content.append(modal_body);
@@ -185,27 +190,28 @@ function createModal(symbol,coinsFromLS)
 
     $('body').append(modal);
     $('#toggleModal'+i+'').removeAttr("checked");
+    $('#toggleModal'+i+'').attr("disabled","");
     $('#toggleModal'+i+'').attr("is_checked","false");
+
     $( "input[coin_symbol='"+symbol+"']" ).attr("data-toggle", "modal");
     $( "input[coin_symbol='"+symbol+"']" ).attr("data-target", ".modal");
 
 }
 
-function addCoinToReps(symbol){
+function handleToogle(symbol){
     let coinsFromLS = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
+
     let state = $( "input[coin_symbol='"+symbol+"']" ).attr("is_checked");
     let result = state.localeCompare("false");
 
     if(result === 0){
-        if(coinsFromLS.length <= 4){
-            $( "input[coin_symbol='"+symbol+"']" ).attr("is_checked", "true");
+        if(coinsFromLS.length < 5){
+           $("input[coin_symbol='"+symbol+"']").attr("is_checked", "true");
             coinsFromLS.push(symbol);
         }
         else{
             createModal(symbol,coinsFromLS);
-            
         }
-        
     }
     else{
         $("input[coin_symbol='"+symbol+"']").attr("is_checked", "false");
@@ -215,6 +221,40 @@ function addCoinToReps(symbol){
     localStorage.setItem('coinsToRepsLocal', JSON.stringify(coinsFromLS));
 
 }
+
+function handleToogleModal(symbol,i)
+{
+    
+    let coinsModal = JSON.parse(localStorage.getItem('coinsFromModalLocal'));
+
+    let state = $('#toggleModal'+ i+'').attr("is_checked");
+    let result = state.localeCompare("false");
+
+    if(result === 0){
+        if(coinsModal.length < 5){
+            $('#toggleModal'+i+'').attr("checked", "");
+            $('#toggleModal'+i+'').attr("is_checked", "true");
+            coinsModal.push(symbol);
+        }
+        else{
+            $('#toggleModal'+ i+'').attr("disabled","");
+            $('#toggleModal'+ i+'').removeAttr("checked");
+        }
+        
+    }else{
+        $('#toggleModal'+i+'').attr("is_checked", "false");
+        $('#toggleModal'+ i+'').removeAttr("checked");
+        coinsModal.splice(coinsModal.indexOf(symbol),1);
+        $('input:last').removeAttr("disabled");
+    }
+
+    console.log(coinsModal);
+    console.log(coinsModal.length);
+    localStorage.setItem('coinsFromModalLocal', JSON.stringify(coinsModal));
+
+
+}
+
 
 
 $(document).ready(function(){
@@ -228,15 +268,25 @@ $(document).ready(function(){
         $('.loading').attr("style", "display: none;");
 
         var coins = data;
+        
         if(localStorage.getItem('coinsToRepsLocal') == null)
         {
             let coinsToReps = [];
             localStorage.setItem('coinsToRepsLocal', JSON.stringify(coinsToReps));
         }
 
-        drawCoins(coins);
-
+      
+        if(localStorage.getItem('coinsToRepsLocal') != null)
+        {
+            localStorage.setItem('coinsFromModalLocal', JSON.stringify(JSON.parse(localStorage.getItem('coinsToRepsLocal'))));
+        }
+        else{
+            let coinsFromModal = [];
+            localStorage.setItem('coinsFromModalLocal', JSON.stringify(coinsFromModal));
+        }
         
+        drawCoins(coins);
+   
     });
 
 
