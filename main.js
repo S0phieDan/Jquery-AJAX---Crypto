@@ -176,8 +176,8 @@ function createModal(symbol,coinsFromLS)
 
 
     let modal_footer =$('<div class="modal-footer"></div>');
-    let btnShowChanges = $('<button class="btn btn-primary" type="button">Show changes</button>');
-    btnShowChanges.attr("onclick", "showChanges()");
+    let btnShowChanges = $('<button class="btn btn-primary" type="button" data-dismiss="modal">Show changes</button>');
+    btnShowChanges.attr("onclick", "displayChanges()");
     let btnCancelChanges = $('<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel changes</button>');
     btnCancelChanges.attr("onclick", "cancelChanges('"+symbol+"')");
     modal_footer.append(btnShowChanges);
@@ -213,7 +213,6 @@ function handleToogle(symbol){
             coinsFromLS.push(symbol);
         }
         else{
-            console.log(coinsFromLS);
             createModal(symbol,coinsFromLS);
         }
     }
@@ -232,7 +231,6 @@ function handleToogleModal(symbol,i)
     let coinsModal = JSON.parse(localStorage.getItem('coinsFromModalLocal'));
 
     let state = $('#toggleModal'+ i+'').attr("is_checked");
-    console.log(state);
     let result = state.localeCompare("false");
 
     if(result === 0){
@@ -303,9 +301,31 @@ function drawToggle(state, type, symbol,i,is_checked)
 
 }
 
-function showChanges()
+function displayChanges()
 {
-    localStorage.setItem('coinsToRepsLocal', JSON.stringify(JSON.parse(localStorage.getItem('coinsFromModalLocal'))));
+    //Add new data
+    let coinsToUpdate = JSON.parse(localStorage.getItem('coinsFromModalLocal'));
+    let coinsNotRelevant = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
+    let temp = differenceOf2Arrays(coinsToUpdate,coinsNotRelevant);
+    console.log(temp);
+
+    localStorage.setItem('coinsToRepsLocal', JSON.stringify(coinsToUpdate));
+
+
+    for(let i=0; i<coinsToUpdate.length;i++){
+        let index = $( "input[coin_symbol='"+coinsToUpdate[i]+"']" ).attr("index");
+        let toggle = drawToggle("not_disabled", "toggle", coinsToUpdate[i], index,"true");
+        let parent = $("input[coin_symbol='"+coinsToUpdate[i]+"']").parent().parent();
+        $("input[coin_symbol='"+coinsToUpdate[i]+"']").parent().remove();
+        parent.append(toggle);
+    }
+
+   
+    let index = $( "input[coin_symbol='"+temp[0]+"']" ).attr("index");
+    let toggle = drawToggle("not_disabled", "toggle", temp[0], index,"false");
+    let parent = $("input[coin_symbol='"+temp[0]+"']").parent().parent();
+    $("input[coin_symbol='"+temp[0]+"']").parent().remove();
+    parent.append(toggle);
 
 }
 
@@ -314,12 +334,23 @@ function cancelChanges(symbol)
     localStorage.setItem('coinsFromModalLocal', JSON.stringify(JSON.parse(localStorage.getItem('coinsToRepsLocal'))));
     let index = $( "input[coin_symbol='"+symbol+"']" ).attr("index");
     let toggle = drawToggle("not_disabled", "toggle", symbol, index,"false");
-    $("input[coin_symbol='"+symbol+"']").parent().html(toggle);
+    let parent = $("input[coin_symbol='"+symbol+"']").parent().parent();
+    $("input[coin_symbol='"+symbol+"']").parent().remove();
+    parent.append(toggle);
 
 }
 
-
-
+function differenceOf2Arrays (array1, array2) {
+    var temp = [];
+    
+    /*for (var i in array1) {
+    if(array2.indexOf(array1[i]) === -1) temp.push(array1[i]);
+    }*/
+    for(i in array2) {
+    if(array1.indexOf(array2[i]) === -1) temp.push(array2[i]);
+    }
+    return temp;
+}
 
 
 
