@@ -37,6 +37,7 @@ function createCardForCoin(coin,i)
     toggle.attr("style", "float: right;");
     let toggleInput = $('<input type="checkbox" class="custom-control-input">');
     toggleInput.attr("id",'toggle'+ i+'');
+    toggleInput.attr("index",''+i+'');
     toggleInput.attr("coin_symbol",coin.symbol);
     if(coinsFromLS.indexOf(toggleInput.attr("coin_symbol")) === -1)
     {
@@ -175,9 +176,11 @@ function createModal(symbol,coinsFromLS)
 
 
     let modal_footer =$('<div class="modal-footer"></div>');
-    let btnSaveChanges = $('<button class="btn btn-primary" type="button">Save changes</button>');
-    let btnCancelChanges = $('<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>');
-    modal_footer.append(btnSaveChanges);
+    let btnShowChanges = $('<button class="btn btn-primary" type="button">Show changes</button>');
+    btnShowChanges.attr("onclick", "showChanges()");
+    let btnCancelChanges = $('<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel changes</button>');
+    btnCancelChanges.attr("onclick", "cancelChanges('"+symbol+"')");
+    modal_footer.append(btnShowChanges);
     modal_footer.append(btnCancelChanges);
 
     modal_content.append(modal_header);
@@ -210,6 +213,7 @@ function handleToogle(symbol){
             coinsFromLS.push(symbol);
         }
         else{
+            console.log(coinsFromLS);
             createModal(symbol,coinsFromLS);
         }
     }
@@ -219,6 +223,7 @@ function handleToogle(symbol){
     }
     
     localStorage.setItem('coinsToRepsLocal', JSON.stringify(coinsFromLS));
+    localStorage.setItem('coinsFromModalLocal', JSON.stringify(JSON.parse(localStorage.getItem('coinsToRepsLocal'))));
 
 }
 
@@ -227,6 +232,7 @@ function handleToogleModal(symbol,i)
     let coinsModal = JSON.parse(localStorage.getItem('coinsFromModalLocal'));
 
     let state = $('#toggleModal'+ i+'').attr("is_checked");
+    console.log(state);
     let result = state.localeCompare("false");
 
     if(result === 0){
@@ -236,7 +242,7 @@ function handleToogleModal(symbol,i)
             coinsModal.push(symbol);
         }
         else{
-            let toggle = drawToggle(symbol,i);
+            let toggle = drawToggle("disabled", "toggleModal", symbol,i ,"false");
             $("span[id='"+i+"']").html(toggle);
 
         }
@@ -246,7 +252,7 @@ function handleToogleModal(symbol,i)
         $('#toggleModal'+ i+'').removeAttr("checked");
         coinsModal.splice(coinsModal.indexOf(symbol),1);
         
-        $("input[disabled='disabled']").removeAttr("disabled"); //draw enabled toggle
+        $("input[disabled='disabled']").removeAttr("disabled");
         
         
     }
@@ -255,26 +261,63 @@ function handleToogleModal(symbol,i)
 
 }
 
-
-function drawToggle(symbol,i)
+function drawToggle(state, type, symbol,i,is_checked)
 {
     let toggle = $('<div class="custom-control custom-switch"></div>');
     toggle.attr("style", "float: right;");
     let toggleInput = $('<input type="checkbox" class="custom-control-input">');
-    toggleInput.attr("id",'toggleModal'+ i+'');
-    toggleInput.attr("symbol",symbol);
-    toggleInput.attr("disabled","disabled");
-    toggleInput.attr("is_checked","false");
-    toggleInput.removeAttr('checked');
-   // toggleInput.attr("onclick", 'handleToogleModal('+'"'+ symbol +'"'+','+i+')');
+    toggleInput.attr("id",''+type+i+'');
+
+    if(type.localeCompare("toggle")===0)
+    {
+        toggleInput.attr("coin_symbol",symbol);
+        toggleInput.attr("onclick", 'handleToogle('+'"'+ symbol +'"'+')');
+    }
+    else
+    {
+        toggleInput.attr("symbol",symbol);
+        toggleInput.attr("onclick", 'handleToogleModal('+'"'+ symbol +'"'+','+i+')');
+    }
+
+    toggleInput.attr(""+state+"",""+state+"");
+
+    if(is_checked.localeCompare("false")===0)
+    {
+        toggleInput.attr("is_checked","false");
+        toggleInput.removeAttr('checked');
+
+    }
+    else
+    {
+        toggleInput.attr("is_checked","true");
+        toggleInput.attr('checked',"");
+
+    }
+    
     toggle.append(toggleInput);
     let toggleLabel = $('<label class="custom-control-label"></label>');
-    toggleLabel.attr("for",'toggleModal'+ i+'');
+    toggleLabel.attr("for",''+type+ i+'');
     toggle.append(toggleLabel);
 
     return toggle;
 
 }
+
+function showChanges()
+{
+    localStorage.setItem('coinsToRepsLocal', JSON.stringify(JSON.parse(localStorage.getItem('coinsFromModalLocal'))));
+
+}
+
+function cancelChanges(symbol)
+{
+    localStorage.setItem('coinsFromModalLocal', JSON.stringify(JSON.parse(localStorage.getItem('coinsToRepsLocal'))));
+    let index = $( "input[coin_symbol='"+symbol+"']" ).attr("index");
+    let toggle = drawToggle("not_disabled", "toggle", symbol, index,"false");
+    $("input[coin_symbol='"+symbol+"']").parent().html(toggle);
+
+}
+
 
 
 
