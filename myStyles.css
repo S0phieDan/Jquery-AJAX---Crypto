@@ -28,7 +28,7 @@ header{
   background-image: url('./micheile-henderson-f030K9IzpcM-unsplash.jpg');
 
   height: 600px; 
-  width: 100%;
+  width: auto;
 
   background-attachment: fixed;
   background-position: center;
@@ -68,6 +68,11 @@ body{
     background-color: #2C3E50;
     background-image: url("asfalt-light.png");
     background-repeat: repeat;
+}
+
+#chart_div{
+    display:flex;
+    justify-content: center;
 }
 
 
