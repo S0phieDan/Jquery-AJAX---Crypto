@@ -269,6 +269,7 @@ function drawToggle(state, type, symbol,i,is_checked)
     if(type.localeCompare("toggle")===0)
     {
         toggleInput.attr("coin_symbol",symbol);
+        toggleInput.attr("index",''+i+'');
         toggleInput.attr("onclick", 'handleToogle('+'"'+ symbol +'"'+')');
     }
     else
