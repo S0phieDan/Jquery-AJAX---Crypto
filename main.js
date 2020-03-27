@@ -161,8 +161,8 @@ function createModal(symbol,coinsFromLS)
     let modal = $('<div class="modal"></div>');
     let modal_dialog = $('<div class="modal-dialog" role="document"></div>');
     let modal_content =$('<div class="modal-content"></div>');
-    let modal_header = $('<div class="modal-header"><h4 class="modal-title">You can choose only 5 coins:</h4><button class="close" aria-label="Close" type="button" data-dismiss="modal"><span aria-hidden="true">&times;</span></button></div>');
-    let modal_body =$('<div class="modal-body"><p>Select only 5 coins from list.</p></div>');
+    let modal_header = $('<div class="modal-header"><h4 class="modal-title">You can choose up to 5 coins:</h4><button class="close" aria-label="Close" type="button" data-dismiss="modal"><span aria-hidden="true">&times;</span></button></div>');
+    let modal_body =$('<div class="modal-body"><p>Select 5 coins or less from the list.</p></div>');
     let modal_list = $('<ul class="list-group" id="ulm"></ul>');
 
     for(var i=0; i<coinsFromLS.length; i++){
@@ -177,7 +177,7 @@ function createModal(symbol,coinsFromLS)
 
     let modal_footer =$('<div class="modal-footer"></div>');
     let btnShowChanges = $('<button class="btn btn-primary" type="button" data-dismiss="modal">Show changes</button>');
-    btnShowChanges.attr("onclick", "displayChanges()");
+    btnShowChanges.attr("onclick", "displayChanges('"+symbol+"')");
     let btnCancelChanges = $('<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel changes</button>');
     btnCancelChanges.attr("onclick", "cancelChanges('"+symbol+"')");
     modal_footer.append(btnShowChanges);
@@ -302,33 +302,46 @@ function drawToggle(state, type, symbol,i,is_checked)
 
 }
 
-function displayChanges()
+function displayChanges(symbol)
 {
     //Add new data
     let coinsToUpdate = JSON.parse(localStorage.getItem('coinsFromModalLocal'));
-    let coinsNotRelevant = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
-    let temp = differenceOf2Arrays(coinsToUpdate,coinsNotRelevant);
+  
+        let coinsNotRelevant = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
+        let temp = differenceOf2Arrays(coinsToUpdate,coinsNotRelevant);
 
-    localStorage.setItem('coinsToRepsLocal', JSON.stringify(coinsToUpdate));
+        if(coinsToUpdate.indexOf(symbol) == -1)
+        {
+            temp.push(symbol);
+        }
+        
+        console.log(temp);
+
+        localStorage.setItem('coinsToRepsLocal', JSON.stringify(coinsToUpdate));
 
 
-    for(let i=0; i<coinsToUpdate.length;i++){
-        let index = $( "input[coin_symbol='"+coinsToUpdate[i]+"']" ).attr("index");
-        let toggle = drawToggle("not_disabled", "toggle", coinsToUpdate[i], index,"true");
-        let parent = $("input[coin_symbol='"+coinsToUpdate[i]+"']").parent().parent();
-        $("input[coin_symbol='"+coinsToUpdate[i]+"']").parent().remove();
-        parent.append(toggle);
+        for(let i=0; i<coinsToUpdate.length;i++)
+        {
+            let index = $( "input[coin_symbol='"+coinsToUpdate[i]+"']" ).attr("index");
+            let toggle = drawToggle("not_disabled", "toggle", coinsToUpdate[i], index,"true");
+            let parent = $("input[coin_symbol='"+coinsToUpdate[i]+"']").parent().parent();
+            $("input[coin_symbol='"+coinsToUpdate[i]+"']").parent().remove();
+            parent.append(toggle);
 
-    }
+        }
 
    
-    let index = $( "input[coin_symbol='"+temp[0]+"']" ).attr("index");
-    let toggle = drawToggle("not_disabled", "toggle", temp[0], index,"false");
-    let parent = $("input[coin_symbol='"+temp[0]+"']").parent().parent();
-    $("input[coin_symbol='"+temp[0]+"']").parent().remove();
-    parent.append(toggle);
+        for(let i=0; i<temp.length; i++)
+        {
+            let index = $( "input[coin_symbol='"+temp[i]+"']" ).attr("index");
+            let toggle = drawToggle("not_disabled", "toggle", temp[i], index,"false");
+            let parent = $("input[coin_symbol='"+temp[i]+"']").parent().parent();
+            $("input[coin_symbol='"+temp[i]+"']").parent().remove();
+            parent.append(toggle);
+        }
 
-    clearModal();
+    
+   clearModal();
 
 
 
