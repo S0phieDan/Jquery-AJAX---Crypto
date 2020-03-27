@@ -307,7 +307,6 @@ function displayChanges()
     let coinsToUpdate = JSON.parse(localStorage.getItem('coinsFromModalLocal'));
     let coinsNotRelevant = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
     let temp = differenceOf2Arrays(coinsToUpdate,coinsNotRelevant);
-    console.log(temp);
 
     localStorage.setItem('coinsToRepsLocal', JSON.stringify(coinsToUpdate));
 
@@ -318,6 +317,7 @@ function displayChanges()
         let parent = $("input[coin_symbol='"+coinsToUpdate[i]+"']").parent().parent();
         $("input[coin_symbol='"+coinsToUpdate[i]+"']").parent().remove();
         parent.append(toggle);
+
     }
 
    
@@ -326,6 +326,10 @@ function displayChanges()
     let parent = $("input[coin_symbol='"+temp[0]+"']").parent().parent();
     $("input[coin_symbol='"+temp[0]+"']").parent().remove();
     parent.append(toggle);
+
+    clearModal();
+
+
 
 }
 
@@ -338,6 +342,7 @@ function cancelChanges(symbol)
     $("input[coin_symbol='"+symbol+"']").parent().remove();
     parent.append(toggle);
 
+    clearModal();
 }
 
 function differenceOf2Arrays (array1, array2) {
@@ -352,6 +357,13 @@ function differenceOf2Arrays (array1, array2) {
     return temp;
 }
 
+function clearModal()
+{
+    $('.modal').remove();
+    $('.modal-backdrop').remove();
+    $('body').removeAttr("class");
+    $('body').removeAttr("style");
+}
 
 
 $(document).ready(function(){
@@ -381,8 +393,10 @@ $(document).ready(function(){
             let coinsFromModal = [];
             localStorage.setItem('coinsFromModalLocal', JSON.stringify(coinsFromModal));
         }
-        
+
         drawCoins(coins);
+
+       
    
     });
 
