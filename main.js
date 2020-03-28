@@ -412,16 +412,24 @@ function drawChart(dataCoinsJson) {
     let dataCoinsArray = Object.entries(dataCoinsJson);
 
     var data = new google.visualization.DataTable();
-    data.addColumn('string', 'X');
+    
+    data.addColumn('timeofday', 'X');
 
    for(let i=0; i<dataCoinsArray.length;i++)
     {
         data.addColumn('number', dataCoinsArray[i][0]);
     }
 
-    let n = Date.now();
-    let time_format = msToTime(n);
-   let row =[""+time_format+""];
+ 
+
+    var d = new Date();
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
+    let seconds = d.getSeconds();
+    row =[[hours, minutes, seconds]];
+    console.log(row);
+    
+
    
    for(let i=0; i<dataCoinsArray.length;i++)
    {
@@ -448,19 +456,6 @@ function drawChart(dataCoinsJson) {
     var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
-
-  function msToTime(duration) {
-    var seconds = parseInt((duration/1000)%60)
-        , minutes = parseInt((duration/(1000*60))%60)
-        , hours = parseInt((duration/(1000*60*60))%24);
-
-    hours = (hours < 10) ? "0" + hours : hours;
-    minutes = (minutes < 10) ? "0" + minutes : minutes;
-    seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-    return hours + ":" + minutes + ":" + seconds;
-}
-
 
 
 $(document).ready(function(){
@@ -506,7 +501,7 @@ $(document).ready(function(){
                 savedRowsChart = [];
                 google.charts.load('current', {'packages':['corechart', 'line']});
 
-                setInterval(function(){ google.charts.setOnLoadCallback(getDataForChart()); }, 2000);
+                setInterval(function(){ google.charts.setOnLoadCallback(getDataForChart); }, 2000);
 
                 
                 
