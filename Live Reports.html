@@ -1,8 +1,13 @@
 <div class="container">
   <div class="jumbotron">
     <h1 class="display-3">Live Reports</h1>
-    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+    <p class="lead">This page presents chart of selected coins. Displayed coin's price in USD vs Time.<br>Chart updates every 2 seconds.</p>
     <hr class="my-4">
-    <div id="chart_div"></div>
+    <div id="chart_div">
+      <img class="center" id="repsLoader" src="076_-loading_animated.gif" style="width:150px;height:auto;display:none;">
+      <div class="alert alert-dismissible alert-danger">
+        <strong>Oops! Something went wrong!</strong><br>Select up to 5 coins and try to reopen Live Reports.
+      </div>
+    </div>
   </div>
 </div>

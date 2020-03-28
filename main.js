@@ -401,13 +401,13 @@ function getDataForChart()
     
        // console.log(coins_value_usd);
 
-        drawChart(coins_value_usd);
+        drawChart(coins_value_usd,str);
         
     });
 
 }
 
-function drawChart(dataCoinsJson) {
+function drawChart(dataCoinsJson,str) {
     
     let dataCoinsArray = Object.entries(dataCoinsJson);
 
@@ -427,7 +427,6 @@ function drawChart(dataCoinsJson) {
     let minutes = d.getMinutes();
     let seconds = d.getSeconds();
     row =[[hours, minutes, seconds]];
-    console.log(row);
     
 
    
@@ -443,7 +442,7 @@ function drawChart(dataCoinsJson) {
     );
 
     var options = {
-        title:' to USD',
+        title:str.toUpperCase()+' to USD',
 
         hAxis: {
           title: 'Time'
@@ -451,12 +450,12 @@ function drawChart(dataCoinsJson) {
         vAxis: {
           title: 'Coin Value'
         },
-        colors:['#e2431e','#e7711b','#f1ca3a','#6f9654','#1c91c0','#43459d']
+        lineWidth: 5,
+        colors:['#FF5733','#75FF33','#33DBFF','#BD33FF','#ffff33','#ff3399']
     };
     var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
-
 
 $(document).ready(function(){
 
@@ -498,13 +497,15 @@ $(document).ready(function(){
 
             if(selected_title.localeCompare("Live Reports")===0)
             {
-                savedRowsChart = [];
-                google.charts.load('current', {'packages':['corechart', 'line']});
-
-                setInterval(function(){ google.charts.setOnLoadCallback(getDataForChart); }, 2000);
-
-                
-                
+                let coinsToDispalyInCharts = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
+                if(coinsToDispalyInCharts.length!=0)
+                {
+                    $('.alert').attr("style", "display: none;");
+                    $('#repsLoader').attr("style", "display: block;");
+                    savedRowsChart = [];
+                    google.charts.load('current', {'packages':['corechart', 'line']});
+                    setInterval(function(){ google.charts.setOnLoadCallback(getDataForChart); }, 2000);
+                }
             }
           }});
 

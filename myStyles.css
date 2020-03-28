@@ -25,10 +25,10 @@ header{
 
 
 .parallax{
-  background-image: url('./micheile-henderson-f030K9IzpcM-unsplash.jpg');
+  background-image: url('./pexels-photo-325154.jpeg');
 
-  height: 600px; 
-  width: auto;
+  height: 400px; 
+  width: 100%;
 
   background-attachment: fixed;
   background-position: center;
@@ -73,6 +73,10 @@ body{
 #chart_div{
     display:flex;
     justify-content: center;
+}
+
+.jumbotron{
+    background-color: white;
 }
 
 
