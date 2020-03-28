@@ -401,39 +401,41 @@ function getDataForChart()
     
        // console.log(coins_value_usd);
 
-        drawChart(coins_value_usd,str);
+        drawChart(coins_value_usd);
         
     });
 
 }
 
-function drawChart(dataCoinsJson,str) {
+function drawChart(dataCoinsJson) {
     
     let dataCoinsArray = Object.entries(dataCoinsJson);
-    
+
     var data = new google.visualization.DataTable();
-    data.addColumn('number', 'X');
+    data.addColumn('string', 'X');
 
    for(let i=0; i<dataCoinsArray.length;i++)
     {
         data.addColumn('number', dataCoinsArray[i][0]);
     }
 
-   let row = [0];
-
+    let n = Date.now();
+    let time_format = msToTime(n);
+   let row =[""+time_format+""];
+   
    for(let i=0; i<dataCoinsArray.length;i++)
    {
        row.push(dataCoinsArray[i][1].USD);
 
    }
-   console.log(row);
+   savedRowsChart.push(row);
 
-    data.addRows([
-      row
-    ]);
+    data.addRows(
+        savedRowsChart
+    );
 
     var options = {
-        title: str.toUpperCase() + ' to USD',
+        title:' to USD',
 
         hAxis: {
           title: 'Time'
@@ -446,6 +448,19 @@ function drawChart(dataCoinsJson,str) {
     var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
+
+  function msToTime(duration) {
+    var seconds = parseInt((duration/1000)%60)
+        , minutes = parseInt((duration/(1000*60))%60)
+        , hours = parseInt((duration/(1000*60*60))%24);
+
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    return hours + ":" + minutes + ":" + seconds;
+}
+
 
 
 $(document).ready(function(){
@@ -488,8 +503,13 @@ $(document).ready(function(){
 
             if(selected_title.localeCompare("Live Reports")===0)
             {
+                savedRowsChart = [];
                 google.charts.load('current', {'packages':['corechart', 'line']});
-                google.charts.setOnLoadCallback(getDataForChart());
+
+                setInterval(function(){ google.charts.setOnLoadCallback(getDataForChart()); }, 2000);
+
+                
+                
             }
           }});
 
