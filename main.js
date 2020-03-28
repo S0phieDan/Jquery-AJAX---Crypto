@@ -315,7 +315,7 @@ function displayChanges(symbol)
             temp.push(symbol);
         }
         
-        console.log(temp);
+        //console.log(temp);
 
         localStorage.setItem('coinsToRepsLocal', JSON.stringify(coinsToUpdate));
 
@@ -379,15 +379,43 @@ function clearModal()
     $('body').removeAttr("style");
 }
 
-function drawChart() {
+function getDataForChart()
+{
+    let coinsToDispalyInCharts = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
 
+    let str = coinsToDispalyInCharts[0];
+
+    for(let i=1; i<coinsToDispalyInCharts.length; i++)
+    {
+        str = str + ",";
+        str = str+coinsToDispalyInCharts[i];
+    }
+    //console.log(str);
+
+    let url_of_api = "https://min-api.cryptocompare.com/data/pricemulti?fsyms="+str+"&tsyms=USD"
+    let coins_value_usd = [];
+
+    getDataFromApi(url_of_api)
+    .then(responseJson => {
+        coins_value_usd = responseJson;
+    
+        //console.log(coins_value_usd);
+
+        drawChart(coins_value_usd,str);
+        
+    });
+
+}
+
+function drawChart(dataCoins,str) {
+    
     var data = new google.visualization.DataTable();
     data.addColumn('number', 'X');
     data.addColumn('number', 'Dogs');
     data.addColumn('number', 'Cats');
 
     data.addRows([
-      [0, 0, 0],    [1, 10, 5],   [2, 23, 15],  [3, 17, 9],   [4, 18, 10],  [5, 9, 5],
+      [0, 100, 0],    [1, 10, 5],   [2, 23, 15],  [3, 17, 9],   [4, 18, 10],  [5, 9, 5],
       [6, 11, 3],   [7, 27, 19],  [8, 33, 25],  [9, 40, 32],  [10, 32, 24], [11, 35, 27],
       [12, 30, 22], [13, 40, 32], [14, 42, 34], [15, 47, 39], [16, 44, 36], [17, 48, 40],
       [18, 52, 44], [19, 54, 46], [20, 42, 34], [21, 55, 47], [22, 56, 48], [23, 57, 49],
@@ -402,15 +430,15 @@ function drawChart() {
     ]);
 
     var options = {
-        title:'How Much Pizza I Ate Last Night',
+        title: str.toUpperCase() + ' to USD',
+
         hAxis: {
           title: 'Time'
         },
         vAxis: {
-          title: 'Popularity'
+          title: 'Coin Value'
         },
-        colors: ['#a52714', '#097138']
-      
+        colors:['#e2431e','#e7711b','#f1ca3a','#6f9654','#1c91c0','#43459d']
     };
     var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
     chart.draw(data, options);
@@ -450,7 +478,7 @@ $(document).ready(function(){
 
     $(".navbar-nav").click(function(e){
         let selected_title = e.target.text;
-        console.log(selected_title);
+        //console.log(selected_title);
 
         $.ajax({url: `${selected_title}.html`, success: function(result){
             $(".content").html(result);
@@ -458,7 +486,7 @@ $(document).ready(function(){
             if(selected_title.localeCompare("Live Reports")===0)
             {
                 google.charts.load('current', {'packages':['corechart', 'line']});
-                google.charts.setOnLoadCallback(drawChart);
+                google.charts.setOnLoadCallback(getDataForChart());
             }
           }});
 
