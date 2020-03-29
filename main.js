@@ -1,15 +1,28 @@
-function drawCoins(coins){
+function drawCoins(coins,isToggled){
 
     //All coins
        /*coins.forEach(coin => {
             createCardForCoin(coin);
         });*/
-    let row = $('<div class="row"></div>');
-    for(let i=0; i<500; i++)
-    {
-        let col_coin = createCardForCoin(coins[i],i);
-        row.append(col_coin);
-    } 
+        $('.container').html("");
+
+        let row = $('<div class="row"></div>');
+        if(isToggled === false){
+            for(let i=0; i<500; i++)
+            {
+                let coin_card = createCardForCoin(coins[i],i);
+                row.append(coin_card);
+
+            } 
+        }else{
+            for(let i=0; i<5; i++)
+            {
+                let coin_card = createCardForCoin(coins[i],i);
+                row.append(coin_card);
+
+            } 
+        }
+    
 
     $('.container').append(row);
 
@@ -468,6 +481,7 @@ $(document).ready(function(){
         $('.loading').attr("style", "display: none;");
 
         var coins = data;
+        localStorage.setItem('allData', JSON.stringify(data));
         
         if(localStorage.getItem('coinsToRepsLocal') == null)
         {
@@ -484,7 +498,19 @@ $(document).ready(function(){
             let coinsFromModal = [];
             localStorage.setItem('coinsFromModalLocal', JSON.stringify(coinsFromModal));
         }
-        drawCoins(coins);
+        drawCoins(coins,false);
+
+        $('.form-inline :checkbox').change(function() {
+            // this will contain a reference to the checkbox   
+            if (this.checked) {
+                console.log("checked!");
+                drawCoins(coins,true);
+    
+            } else {
+                console.log("cancel checked!");
+                drawCoins(coins,false);
+            }
+        });
 
     });
 
@@ -508,9 +534,10 @@ $(document).ready(function(){
                 }
             }
           }});
-
     });
 
+    
 
+    
 
 });
