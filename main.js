@@ -4,7 +4,6 @@ function drawCoins(coins,isToggled){
        /*coins.forEach(coin => {
             createCardForCoin(coin);
         });*/
-        $('.container').html("");
 
         let row = $('<div class="row"></div>');
         if(isToggled === false){
@@ -13,18 +12,24 @@ function drawCoins(coins,isToggled){
                 let coin_card = createCardForCoin(coins[i],i);
                 row.append(coin_card);
 
-            } 
+            }
+            $('.data-coins').append(row);
         }else{
-            for(let i=0; i<5; i++)
-            {
-                let coin_card = createCardForCoin(coins[i],i);
-                row.append(coin_card);
 
+            let coinsFromLS = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
+          
+            const result = coins.filter(coin => coinsFromLS.indexOf(coin.symbol) != -1);
+            
+            for(let i=0; i<result.length; i++)
+            {
+                let coin_card = createCardForCoin(result[i],i);
+                row.append(coin_card);
             } 
+
+            $('.container').append(row);
         }
     
 
-    $('.container').append(row);
 
 }
 
@@ -113,34 +118,50 @@ function openMoreInfo(index,string_id)
     let url_of_api = "https://api.coingecko.com/api/v3/coins/"+string_id;
     let data_per_coin = [];
 
-    getDataFromApi(url_of_api)
-    .then(responseJson => {
-        data_per_coin = responseJson;
+    if( localStorage.getItem(''+string_id+'') === null)
+    {
+        getDataFromApi(url_of_api)
+        .then(responseJson => {
+            data_per_coin = responseJson;
+            data_per_coin.startTime = Date.now();
+            localStorage.setItem(''+string_id+'', JSON.stringify(data_per_coin));
+
+            createMoreInfoCollapse(data_per_coin,index);
+            
+
+        });
     
-        let img_url = data_per_coin.image.small;
+    }else{
+        let openMoreInfoLS = JSON.parse(localStorage.getItem(''+string_id+''));
+        let time_now = Date.now();
 
-        $('#collapseDiv'+index+'').html('<img src='+img_url+'>'+'<br>'
-                    +'<b>USD</b>: '+data_per_coin.market_data.current_price.usd+" $"+'<br>'
-                    +'<b>EUR</b>: '+data_per_coin.market_data.current_price.eur+" €"+'<br>'
-                    +'<b>ILS</b>: '+data_per_coin.market_data.current_price.ils+" ₪"+'<br><br>'+'')
-        
-                
-        let expandedAttr = $('#moreInfo'+index+'').attr("aria-expanded");
-        let  strTrue = "true";
-
-        let result = strTrue.localeCompare(expandedAttr);
-
-        if(result === 0){
-            $('#moreInfo'+index+'').text("Less Info");
+        if(time_now - openMoreInfoLS.startTime === 120000 || time_now - openMoreInfoLS.startTime > 120000)
+        {
+            localStorage.removeItem(''+string_id+'');
+            openMoreInfo(index, string_id);
         }
-        else {
+        else
+        {
+            createMoreInfoCollapse(openMoreInfoLS,index);
+        }
+
+    }
+
+    
+}
+
+
+function createMoreInfoCollapse(data,index)
+{
+    let img_url = data.image.small;
+
+            $('#collapseDiv'+index+'').html('<img src='+img_url+'>'+'<br>'
+                        +'<b>USD</b>: '+data.market_data.current_price.usd+" $"+'<br>'
+                        +'<b>EUR</b>: '+data.market_data.current_price.eur+" €"+'<br>'
+                        +'<b>ILS</b>: '+data.market_data.current_price.ils+" ₪"+'<br><br>'+'');
+            
+            
             $('#moreInfo'+index+'').text("More Info");
-        }
-        
-    });
-
- 
-
 }
 
 function createLiForModal(symbol,i)
@@ -503,12 +524,11 @@ $(document).ready(function(){
         $('.form-inline :checkbox').change(function() {
             // this will contain a reference to the checkbox   
             if (this.checked) {
-                console.log("checked!");
                 drawCoins(coins,true);
+                $('.data-coins').attr("style", "display: none;");
     
             } else {
-                console.log("cancel checked!");
-                drawCoins(coins,false);
+                $('.data-coins').attr("style", "display: block;");
             }
         });
 
