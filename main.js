@@ -504,7 +504,7 @@ $(document).ready(function(){
     }).done(function(data)
     {
         $('.loading').attr("style", "display: none;");
-        
+
         var coins = data;
         localStorage.setItem('allData', JSON.stringify(data));
         
