@@ -491,20 +491,24 @@ function drawChart(dataCoinsJson,str) {
     chart.draw(data, options);
   }
 
-function searchCoins(searchSymbol,mappedData){
+function searchCoins(searchSymbol,coins){
    // $('.searchedCoins').html(searchedCoins);
-
-   for(let i=0; i<mappedData.length;i++)
+ 
+   for(let i=0; i<coins.length;i++)
    {
-        let result = mappedData[i].localeCompare(searchSymbol.toLocaleLowerCase());
-        console.log(result);
+        let result = coins[i].symbol.localeCompare(searchSymbol.toLocaleLowerCase());
+
         if(result===0){
-            $('.searchedCoins').html(searchSymbol);
+           
+            let row = $('<div class="row"></div>');
+            let coin_card = createCardForCoin(coins[i],i);
+            row.append(coin_card);
+            $('.searchedCoins').html(row);
             break;
         }
         else{
-        $('.searchedCoins').html("Coin not found!");
-        }
+            $('.searchedCoins').html('<div class="alert alert-dismissible alert-danger"><strong>Oops! Something went wrong!</strong><br>Symbol "'+searchSymbol+'" is not found!.</div>');
+    }
 
    }
 
@@ -520,7 +524,6 @@ $(document).ready(function(){
     {
         $('.loading').attr("style", "display: none;");
 
-        var mappedData = data.map(element => element.symbol);
         var coins = data;
         localStorage.setItem('allData', JSON.stringify(data));
         
@@ -557,9 +560,11 @@ $(document).ready(function(){
 
         $('.form-inline :button').click(function(e){
             e.preventDefault();
+            $('.data-coins').attr("style", "display: none;");
+            $('.searchedCoins').attr("style", "display: block;");
 
             let str = $('.form-inline :text').val();
-            searchCoins(str,mappedData);
+            searchCoins(str,coins);
            // console.log($('.form-inline :text').val());
         });
 
@@ -569,22 +574,30 @@ $(document).ready(function(){
         let selected_title = e.target.text;
         //console.log(selected_title);
 
-        $.ajax({url: `${selected_title}.html`, success: function(result){
-            $(".content").html(result);
+        if(selected_title.localeCompare("Home")!= 0){
 
-            if(selected_title.localeCompare("Live Reports")===0)
-            {
-                let coinsToDispalyInCharts = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
-                if(coinsToDispalyInCharts.length!=0)
+            $('#home').removeClass("active");
+
+
+            $.ajax({url: `${selected_title}.html`, success: function(result){
+                $(".content").html(result);
+    
+                if(selected_title.localeCompare("Live Reports")===0)
                 {
-                    $('.alert').attr("style", "display: none;");
-                    $('#repsLoader').attr("style", "display: block;");
-                    savedRowsChart = [];
-                    google.charts.load('current', {'packages':['corechart', 'line']});
-                    setInterval(function(){ google.charts.setOnLoadCallback(getDataForChart); }, 2000);
+                    let coinsToDispalyInCharts = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
+                    if(coinsToDispalyInCharts.length!=0)
+                    {
+                        $('.alert').attr("style", "display: none;");
+                        $('#repsLoader').attr("style", "display: block;");
+                        savedRowsChart = [];
+                        google.charts.load('current', {'packages':['corechart', 'line']});
+                        setInterval(function(){ google.charts.setOnLoadCallback(getDataForChart); }, 2000);
+                    }
                 }
-            }
-          }});
+              }});     
+        }
+
+        
     });
 
     

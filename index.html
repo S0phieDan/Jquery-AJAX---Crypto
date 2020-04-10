@@ -26,8 +26,8 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="">Home <span class="sr-only">(current)</span></a>
+          <li class="nav-item active" id="home">
+            <a class="nav-link" href="index.html">Home </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Live Reports</a>
@@ -43,7 +43,7 @@
                 Show only selected coins
               </label>
             </div>
-          <input class="form-control mr-sm-2" id="searchInput" type="text" placeholder="Search">
+          <input class="form-control mr-sm-2" id="searchInput" type="text" placeholder="Search symbol of coin...">
           <button class="btn btn-secondary my-sm-0" id="searchButton" type="submit">Search</button>
         </form>
       </div>
@@ -56,7 +56,11 @@
       <div class="container">
         <div class="toggledOnly">
         </div>
-        <div class="searchedCoins">
+        <div class="searchedCoins" style="display: none;">
+          <div class="searching">
+            <h3>Searchig...</h3>
+            <img  src="unnamed.gif" style="width:150px;height:auto;">
+          </div>
         </div>
         <div class="data-coins">
           <div class="loading">

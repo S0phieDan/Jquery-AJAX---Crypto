@@ -57,6 +57,13 @@ header{
     color: white;
 }
 
+.searching{
+    width: 100%;
+    text-align: center;
+    display: block;
+    color: white;
+}
+
 .center {
     display: block;
     margin-left: auto;
