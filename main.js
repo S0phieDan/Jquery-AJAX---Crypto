@@ -491,8 +491,23 @@ function drawChart(dataCoinsJson,str) {
     chart.draw(data, options);
   }
 
-function searchCoins(searchedCoins){
-    $('.searchedCoins').html(searchedCoins);
+function searchCoins(searchSymbol,mappedData){
+   // $('.searchedCoins').html(searchedCoins);
+
+   for(let i=0; i<mappedData.length;i++)
+   {
+        let result = mappedData[i].localeCompare(searchSymbol.toLocaleLowerCase());
+        console.log(result);
+        if(result===0){
+            $('.searchedCoins').html(searchSymbol);
+            break;
+        }
+        else{
+        $('.searchedCoins').html("Coin not found!");
+        }
+
+   }
+
 }
 
 $(document).ready(function(){
@@ -505,6 +520,7 @@ $(document).ready(function(){
     {
         $('.loading').attr("style", "display: none;");
 
+        var mappedData = data.map(element => element.symbol);
         var coins = data;
         localStorage.setItem('allData', JSON.stringify(data));
         
@@ -542,7 +558,8 @@ $(document).ready(function(){
         $('.form-inline :button').click(function(e){
             e.preventDefault();
 
-            searchCoins($('.form-inline :text').val());
+            let str = $('.form-inline :text').val();
+            searchCoins(str,mappedData);
            // console.log($('.form-inline :text').val());
         });
 
