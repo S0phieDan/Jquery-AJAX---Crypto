@@ -26,7 +26,7 @@ function drawCoins(coins,isToggled){
                 row.append(coin_card);
             } 
 
-            $('.container').append(row);
+            $('.toggledOnly').append(row);
         }
     
 
@@ -482,7 +482,7 @@ function drawChart(dataCoinsJson,str) {
           title: 'Time'
         },
         vAxis: {
-          title: 'Coin Value'
+          title: 'Coin Value in USD'
         },
         lineWidth: 5,
         colors:['#FF5733','#75FF33','#33DBFF','#BD33FF','#ffff33','#ff3399']
@@ -490,6 +490,10 @@ function drawChart(dataCoinsJson,str) {
     var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
+
+function searchCoins(searchedCoins){
+    $('.searchedCoins').html(searchedCoins);
+}
 
 $(document).ready(function(){
 
@@ -500,7 +504,7 @@ $(document).ready(function(){
     }).done(function(data)
     {
         $('.loading').attr("style", "display: none;");
-
+        
         var coins = data;
         localStorage.setItem('allData', JSON.stringify(data));
         
@@ -526,15 +530,25 @@ $(document).ready(function(){
             if (this.checked) {
                 drawCoins(coins,true);
                 $('.data-coins').attr("style", "display: none;");
+                $('.toggledOnly').attr("style", "display: block;");
     
             } else {
                 $('.data-coins').attr("style", "display: block;");
+                $('.toggledOnly').attr("style", "display: none;");
+                $('.toggledOnly').html("");
             }
+        });
+
+        $('.form-inline :button').click(function(e){
+            e.preventDefault();
+
+            searchCoins($('.form-inline :text').val());
+           // console.log($('.form-inline :text').val());
         });
 
     });
 
-    $(".navbar-nav").click(function(e){
+   $(".navbar-nav").click(function(e){
         let selected_title = e.target.text;
         //console.log(selected_title);
 

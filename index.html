@@ -43,8 +43,8 @@
                 Show only selected coins
               </label>
             </div>
-          <input class="form-control mr-sm-2" type="text" placeholder="Search">
-          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+          <input class="form-control mr-sm-2" id="searchInput" type="text" placeholder="Search">
+          <button class="btn btn-secondary my-sm-0" id="searchButton" type="submit">Search</button>
         </form>
       </div>
     </nav>
@@ -54,7 +54,10 @@
       </div>
 
       <div class="container">
-
+        <div class="toggledOnly">
+        </div>
+        <div class="searchedCoins">
+        </div>
         <div class="data-coins">
           <div class="loading">
             <h3>Please Wait...</h3>
