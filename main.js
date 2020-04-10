@@ -7,7 +7,7 @@ function drawCoins(coins,isToggled){
 
         let row = $('<div class="row"></div>');
         if(isToggled === false){
-            for(let i=0; i<500; i++)
+            for(let i=0; i<coins.length; i++)
             {
                 let coin_card = createCardForCoin(coins[i],i);
                 row.append(coin_card);
@@ -149,7 +149,6 @@ function openMoreInfo(index,string_id)
 
     
 }
-
 
 function createMoreInfoCollapse(data,index)
 {
@@ -494,23 +493,27 @@ function drawChart(dataCoinsJson,str) {
 function searchCoins(searchSymbol,coins){
    // $('.searchedCoins').html(searchedCoins);
  
+   let isFound = false;
    for(let i=0; i<coins.length;i++)
    {
         let result = coins[i].symbol.localeCompare(searchSymbol.toLocaleLowerCase());
-
+    
         if(result===0){
            
             let row = $('<div class="row"></div>');
             let coin_card = createCardForCoin(coins[i],i);
             row.append(coin_card);
             $('.searchedCoins').html(row);
+            isFound = true;
             break;
         }
-        else{
-            $('.searchedCoins').html('<div class="alert alert-dismissible alert-danger"><strong>Oops! Something went wrong!</strong><br>Symbol "'+searchSymbol+'" is not found!.</div>');
     }
 
-   }
+    if(!isFound)
+    {
+        $('.searchedCoins').html('<div class="alert alert-dismissible alert-danger"><strong>Oops! Something went wrong!</strong><br>Symbol "'+searchSymbol+'" is not found!.</div>');
+    }
+   
 
 }
 
@@ -545,6 +548,7 @@ $(document).ready(function(){
         drawCoins(coins,false);
 
         $('.form-inline :checkbox').change(function() {
+
             // this will contain a reference to the checkbox   
             if (this.checked) {
                 drawCoins(coins,true);
@@ -553,8 +557,10 @@ $(document).ready(function(){
     
             } else {
                 $('.data-coins').attr("style", "display: block;");
+                $('.data-coins').html("");
                 $('.toggledOnly').attr("style", "display: none;");
                 $('.toggledOnly').html("");
+                drawCoins(coins,false);
             }
         });
 
