@@ -597,7 +597,7 @@ function showNextPage(currentPageIndex, limitPerPage)
 
 function pagination(){
     let numerOfItems = parseInt($('.row_coins .col').length);
-    let limitPerPage = 21;
+    let limitPerPage = 18;
     //console.log(numerOfItems);
     $('.row_coins .col:gt('+ (limitPerPage-1) +')').hide();
 

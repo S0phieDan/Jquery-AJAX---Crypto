@@ -104,3 +104,13 @@ body{
     justify-content: center;
 }
 
+footer{
+    background-color: #ECF0F1;
+    display: block;
+    font-size: large;
+    text-align: center;
+    margin:0px;
+    padding: 0px;
+    opacity: 0.5;
+}
+
