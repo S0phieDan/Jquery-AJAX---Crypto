@@ -100,7 +100,7 @@ body{
 
 .paginationDiv
 {
-    padding-left: 40%;
-    padding-right: 40%;
+    display:flex;
+    justify-content: center;
 }
 

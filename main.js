@@ -604,7 +604,7 @@ function pagination(){
     let totalPages = Math.ceil(numerOfItems / limitPerPage);
     //console.log(totalPages);
 
-    $('.pagination').append('<li class="page-item disabled" id="prev-page"><a class="page-link" href="javascript:void(0)">&laquo;</a></li>');
+    $('.pagination').append('<li class="page-item disabled" id="prev-page"><a class="page-link" href="javascript:void(0)">&laquoPrevious</a></li>');
     $('.pagination').append('<li class="page-item active current-page"><a class="page-link" href="javascript:void(0)">'+1+'</a></li>');
 
     for(let i=2; i<totalPages+1; i++)
@@ -612,7 +612,7 @@ function pagination(){
         $('.pagination').append('<li class="page-item current-page"><a class="page-link" href="javascript:void(0)">'+i+'</a></li>');
     }
 
-    $('.pagination').append('<li class="page-item" id="next-page"><a class="page-link" href="javascript:void(0)">&raquo;</a></li>');
+    $('.pagination').append('<li class="page-item" id="next-page"><a class="page-link" href="javascript:void(0)">Next&raquo</a></li>');
 
     $('.pagination li.current-page').on("click", function(){
 
@@ -634,11 +634,11 @@ function pagination(){
 
     $('#next-page').on("click", function(){
         let currentPage = parseInt($('.pagination li.active').index());
-        console.log("active page is:" + currentPage);
+        //console.log("active page is:" + currentPage);
+        $('.pagination li#prev-page').removeClass("disabled");
 
         if(currentPage === totalPages){
-            //$(this).addClass("disabled");
-            console.log("here");
+            $(this).addClass("disabled");
         }
         else{
             currentPage++;
@@ -653,7 +653,8 @@ function pagination(){
 
     $('#prev-page').on("click", function(){
         let currentPage = $('.pagination li.active').index();
-        console.log("active page is:" + currentPage);
+       // console.log("active page is:" + currentPage);
+        $('.pagination li#next-page').removeClass("disabled");
 
         if(currentPage === 1){
             $(this).addClass("disabled");
