@@ -7,7 +7,7 @@ function drawCoins(coins,isToggled){
 
         let row = $('<div class="row"></div>');
         if(isToggled === false){
-            for(let i=0; i<coins.length; i++)
+            for(let i=0; i<500; i++)
             {
                 let coin_card = createCardForCoin(coins[i],i);
                 row.append(coin_card);
@@ -517,7 +517,11 @@ function searchCoins(searchSymbol,coins){
 
 }
 
-$(document).ready(function(){
+function loadHomePageWithCoins()
+{
+    $.ajax({url: `Home.html`, success: function(result){
+        $(".htmlPages").html(result);
+      }});    
 
     $.ajax({
         method: 'GET',
@@ -563,18 +567,25 @@ $(document).ready(function(){
                 drawCoins(coins,false);
             }
         });
-
+    
         $('.form-inline :button').click(function(e){
-            e.preventDefault();
-            $('.data-coins').attr("style", "display: none;");
-            $('.searchedCoins').attr("style", "display: block;");
-
-            let str = $('.form-inline :text').val();
-            searchCoins(str,coins);
-           // console.log($('.form-inline :text').val());
+                e.preventDefault();
+                $('.data-coins').attr("style", "display: none;");
+                $('.searchedCoins').attr("style", "display: block;");
+    
+                let str = $('.form-inline :text').val();
+                searchCoins(str,coins);
+            // console.log($('.form-inline :text').val());
         });
 
     });
+   
+
+}
+
+$(document).ready(function(){
+
+    loadHomePageWithCoins();
 
    $(".navbar-nav").click(function(e){
         let selected_title = e.target.text;
@@ -583,10 +594,11 @@ $(document).ready(function(){
         if(selected_title.localeCompare("Home")!= 0){
 
             $('#home').removeClass("active");
+            $('.parallax').attr("style", "display: none;");
 
 
             $.ajax({url: `${selected_title}.html`, success: function(result){
-                $(".content").html(result);
+                $(".htmlPages").html(result);
     
                 if(selected_title.localeCompare("Live Reports")===0)
                 {
@@ -601,6 +613,11 @@ $(document).ready(function(){
                     }
                 }
               }});     
+        }
+        else{
+            $('#home').addClass("active");
+            $('.parallax').attr("style", "display: block;");
+            loadHomePageWithCoins(); 
         }
 
         
