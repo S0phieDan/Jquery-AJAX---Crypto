@@ -5,9 +5,9 @@ function drawCoins(coins,isToggled){
             createCardForCoin(coin);
         });*/
 
-        let row = $('<div class="row"></div>');
+        let row = $('<div class="row row_coins"></div>');
         if(isToggled === false){
-            for(let i=0; i<500; i++)
+            for(let i=0; i<100; i++)
             {
                 let coin_card = createCardForCoin(coins[i],i);
                 row.append(coin_card);
@@ -550,6 +550,7 @@ function loadHomePageWithCoins()
             localStorage.setItem('coinsFromModalLocal', JSON.stringify(coinsFromModal));
         }
         drawCoins(coins,false);
+        pagination();
 
         $('.form-inline :checkbox').change(function() {
 
@@ -581,6 +582,94 @@ function loadHomePageWithCoins()
     });
    
 
+}
+
+function showNextPage(currentPageIndex, limitPerPage)
+{
+    let grandTotal = limitPerPage * currentPageIndex;
+
+            for(let i=grandTotal - limitPerPage; i< grandTotal; i++)
+            {
+                $('.row_coins .col:eq('+i+')').show();
+            }
+
+}
+
+function pagination(){
+    let numerOfItems = parseInt($('.row_coins .col').length);
+    let limitPerPage = 21;
+    //console.log(numerOfItems);
+    $('.row_coins .col:gt('+ (limitPerPage-1) +')').hide();
+
+    let totalPages = Math.ceil(numerOfItems / limitPerPage);
+    //console.log(totalPages);
+
+    $('.pagination').append('<li class="page-item disabled" id="prev-page"><a class="page-link" href="javascript:void(0)">&laquo;</a></li>');
+    $('.pagination').append('<li class="page-item active current-page"><a class="page-link" href="javascript:void(0)">'+1+'</a></li>');
+
+    for(let i=2; i<totalPages+1; i++)
+    {
+        $('.pagination').append('<li class="page-item current-page"><a class="page-link" href="javascript:void(0)">'+i+'</a></li>');
+    }
+
+    $('.pagination').append('<li class="page-item" id="next-page"><a class="page-link" href="javascript:void(0)">&raquo;</a></li>');
+
+    $('.pagination li.current-page').on("click", function(){
+
+        if($(this).hasClass("active")){
+            console.log("user clicked on same page ");
+        }
+        else{
+            let currentPageIndex = $(this).index();
+            $('.pagination li.current-page').removeClass("active");
+            $(this).addClass("active");
+            console.log("user clicked on page: " + currentPageIndex);
+            $('.row_coins .col').hide();
+
+            showNextPage(currentPageIndex, limitPerPage);
+
+            
+        }
+    });
+
+    $('#next-page').on("click", function(){
+        let currentPage = parseInt($('.pagination li.active').index());
+        console.log("active page is:" + currentPage);
+
+        if(currentPage === totalPages){
+            //$(this).addClass("disabled");
+            console.log("here");
+        }
+        else{
+            currentPage++;
+            $('.pagination li.current-page').removeClass("active");
+            $('.pagination li.current-page:eq('+(currentPage - 1)+')').addClass("active");
+            $('.row_coins .col').hide();
+
+            showNextPage(currentPage, limitPerPage);
+        }
+
+    });
+
+    $('#prev-page').on("click", function(){
+        let currentPage = $('.pagination li.active').index();
+        console.log("active page is:" + currentPage);
+
+        if(currentPage === 1){
+            $(this).addClass("disabled");
+        }
+        else{
+            currentPage--;
+            $('.pagination li.current-page').removeClass("active");
+            $('.pagination li.current-page:eq('+(currentPage - 1)+')').addClass("active");
+            $('.row_coins .col').hide();
+            
+
+            showNextPage(currentPage, limitPerPage);
+        }
+
+    });
+    
 }
 
 $(document).ready(function(){
@@ -619,12 +708,7 @@ $(document).ready(function(){
             $('.parallax').attr("style", "display: block;");
             loadHomePageWithCoins(); 
         }
-
         
     });
-
-    
-
-    
 
 });
