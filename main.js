@@ -13,7 +13,7 @@ function drawCoins(coins,isToggled){
                 row.append(coin_card);
 
             }
-            $('.data-coins').append(row);
+            $('.data-coins').html(row);
         }else{
 
             let coinsFromLS = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
@@ -26,7 +26,7 @@ function drawCoins(coins,isToggled){
                 row.append(coin_card);
             } 
 
-            $('.toggledOnly').append(row);
+            $('.toggledOnly').html(row);
         }
     
 
