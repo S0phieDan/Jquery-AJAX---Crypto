@@ -7,7 +7,7 @@ function drawCoins(coins,isToggled){
 
         let row = $('<div class="row row_coins"></div>');
         if(isToggled === false){
-            for(let i=0; i<100; i++)
+            for(let i=0; i<coins.length; i++)
             {
                 let coin_card = createCardForCoin(coins[i],i);
                 row.append(coin_card);
@@ -552,20 +552,38 @@ function loadHomePageWithCoins()
         drawCoins(coins,false);
         pagination();
 
-        $('.form-inline :checkbox').change(function() {
+        let arrayOldData =  [];
+        let arrayNewData = [];
 
+        $('.form-inline :checkbox').change(function() {
+            
             // this will contain a reference to the checkbox   
             if (this.checked) {
+                arrayOldData = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
                 drawCoins(coins,true);
                 $('.data-coins').attr("style", "display: none;");
                 $('.toggledOnly').attr("style", "display: block;");
     
             } else {
+                arrayNewData = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
+                console.log(arrayOldData);
+                console.log(arrayNewData);
+                let temp = differenceOf2Arrays(arrayNewData,arrayOldData);
+                console.log(temp);
+                
+                for(let i=0; i<temp.length; i++)
+                {
+                    let index = $( "input[coin_symbol='"+temp[i]+"']" ).attr("index");
+                    let toggle = drawToggle("not_disabled", "toggle", temp[i], index,"false");
+                    let parent = $("input[coin_symbol='"+temp[i]+"']").parent().parent();
+                    $("input[coin_symbol='"+temp[i]+"']").parent().remove();
+                    parent.append(toggle);
+                }
+
                 $('.data-coins').attr("style", "display: block;");
-                $('.data-coins').html("");
                 $('.toggledOnly').attr("style", "display: none;");
-                $('.toggledOnly').html("");
-                drawCoins(coins,false);
+               
+                //drawCoins(coins,false);
             }
         });
     
