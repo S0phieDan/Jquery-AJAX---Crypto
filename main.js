@@ -565,6 +565,11 @@ function loadHomePageWithCoins()
                 $('.toggledOnly').attr("style", "display: block;");
     
             } else {
+                
+                $('.toggledOnly').html("");
+                $('.toggledOnly').attr("style", "display: none;");
+                $('.data-coins').attr("style", "display: block;");
+
                 arrayNewData = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
                 console.log(arrayOldData);
                 console.log(arrayNewData);
@@ -580,8 +585,7 @@ function loadHomePageWithCoins()
                     parent.append(toggle);
                 }
 
-                $('.data-coins').attr("style", "display: block;");
-                $('.toggledOnly').attr("style", "display: none;");
+                
                
                 //drawCoins(coins,false);
             }
@@ -594,6 +598,7 @@ function loadHomePageWithCoins()
     
                 let str = $('.form-inline :text').val();
                 searchCoins(str,coins);
+                $('.form-inline :text').val("");
             // console.log($('.form-inline :text').val());
         });
 
