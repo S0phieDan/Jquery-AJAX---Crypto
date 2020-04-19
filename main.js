@@ -562,6 +562,7 @@ function loadHomePageWithCoins()
                 arrayOldData = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
                 drawCoins(coins,true);
                 $('.data-coins').attr("style", "display: none;");
+                $('.paginationDiv').attr("style", "display: none;");
                 $('.toggledOnly').attr("style", "display: block;");
     
             } else {
@@ -569,12 +570,13 @@ function loadHomePageWithCoins()
                 $('.toggledOnly').html("");
                 $('.toggledOnly').attr("style", "display: none;");
                 $('.data-coins').attr("style", "display: block;");
+                $('.paginationDiv').attr("style", "display: flex;");
 
                 arrayNewData = JSON.parse(localStorage.getItem('coinsToRepsLocal'));
-                console.log(arrayOldData);
-                console.log(arrayNewData);
+                //console.log(arrayOldData);
+                //console.log(arrayNewData);
                 let temp = differenceOf2Arrays(arrayNewData,arrayOldData);
-                console.log(temp);
+               // console.log(temp);
                 
                 for(let i=0; i<temp.length; i++)
                 {
@@ -594,6 +596,7 @@ function loadHomePageWithCoins()
         $('.form-inline :button').click(function(e){
                 e.preventDefault();
                 $('.data-coins').attr("style", "display: none;");
+                $('.paginationDiv').attr("style", "display: none;");
                 $('.searchedCoins').attr("style", "display: block;");
     
                 let str = $('.form-inline :text').val();
@@ -620,12 +623,12 @@ function showNextPage(currentPageIndex, limitPerPage)
 
 function pagination(){
     let numerOfItems = parseInt($('.row_coins .col').length);
-    let limitPerPage = 18;
-    //console.log(numerOfItems);
+    let limitPerPage = 297;
+    console.log(numerOfItems);
     $('.row_coins .col:gt('+ (limitPerPage-1) +')').hide();
 
     let totalPages = Math.ceil(numerOfItems / limitPerPage);
-    //console.log(totalPages);
+    console.log(totalPages);
 
     $('.pagination').append('<li class="page-item disabled" id="prev-page"><a class="page-link" href="javascript:void(0)">&laquoPrevious</a></li>');
     $('.pagination').append('<li class="page-item active current-page"><a class="page-link" href="javascript:void(0)">'+1+'</a></li>');
